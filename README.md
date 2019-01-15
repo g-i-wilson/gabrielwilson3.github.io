@@ -25,17 +25,17 @@
 	<tr>
 		<td>1</td>
 		<td>data 1</td>
-		<td>data 2</th>
+		<td>data 2</td>
 	</tr>
 	<tr>
 		<td>2</td>
 		<td>data a</td>
-		<td>data b</th>
+		<td>data b</td>
 	</tr>
 	<tr>
 		<td>custom id</td>
 		<td>data AA</td>
-		<td>data BB</th>
+		<td>data BB</td>
 	</tr>
 </table>
 
