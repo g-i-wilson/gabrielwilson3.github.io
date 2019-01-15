@@ -1,11 +1,10 @@
 # CanoeDB  
-#### A *really simple* NoSQL database on the front-end; just a directory of CSV files on the back-end. 
+#### A simple NoSQL database on the front-end; just a directory of CSV files on the back-end. 
  
  
 * **Relational:** CSV files become tables with relationships to other tables  
 * **Auto-dereferencing:** queries that span multiple tables are dereferenced automatically (and any tables in between)
 * **Simple Referencing:** left column is always the reference ID  
-* **Spaces-Friendly:** spaces are welcome in titles, IDs, data... anywhere!
 * **Simple configuration:** first three lines in CSV file:  
 <table>
 	<tr>
@@ -31,7 +30,8 @@
 * **Reliable:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  *Transform* modifiers such as *Last* (See #API) can be used to return the latest data written.
 * **In-Memory:** In the 64-bit age, cost rather than address space typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization and volume of RAM you can afford, then in-memory makes sense.
 	  
-# API  
+# HTTP API  
+*The Webserver layer*
 ## GET & POST Requests
 Commands can be added in any order as the REST path.
 #### GET Exammple:
@@ -42,6 +42,23 @@ Commands can be added in any order as the REST path.
 ## Commands
 #### Data Type
 - json
+```json
+{
+	"name" : "database folder name",
+	"structure" : {
+		"Table 1" : {
+			"Column 1" : {
+				"transform" : "TimeStamp"
+			},
+			"Column 2" : {
+				"reference" : "Table 2"
+			}
+		}
+	},
+	"columns" : {},
+	"rows" : {}
+}
+```
 - csv
 - form (default)
 #### R/W
