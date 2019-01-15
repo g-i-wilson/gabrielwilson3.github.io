@@ -8,22 +8,34 @@
 * **Simple configuration:** first three lines in CSV file:  
 <table>
 	<tr>
-		<th></th><th>Column Title 1</th><th>Column Title 2</th>
+		<th></th>
+		<th>Column Title 1</th>
+		<th>Column Title 2</th>
 	</tr>
 	<tr>
-		<th></th><th></th><th>A Different Table</th>
+		<th></th>
+		<th></th>
+		<th>A Different Table</th>
 	</tr>
 	<tr>
-		<th></th><th>TimeStamp</th><th></th>
+		<th></th>
+		<th>TimeStamp</th>
+		<th></th>
 	</tr>
 	<tr>
-		<td>1</td><td>data 1</td><td>data 2</th>
+		<td>1</td>
+		<td>data 1</td>
+		<td>data 2</th>
 	</tr>
 	<tr>
-		<td>2</td><td>data a</td><td>data b</th>
+		<td>2</td>
+		<td>data a</td>
+		<td>data b</th>
 	</tr>
 	<tr>
-		<td>custom id</td><td>data AA</td><td>data BB</th>
+		<td>custom id</td>
+		<td>data AA</td>
+		<td>data BB</th>
 	</tr>
 </table>
 
