@@ -128,6 +128,7 @@ Transform objects extend the base *Transform* object, and are dynamically loaded
 ## Tree-Structure vs. Related Tables:  
 - Tree-like data structures are wonderful (e.g. JSON), but they aren’t always a silver bullet when it comes to overly intertwined and tangled data.  
 - Example: the following describes a tree model with some departmental roles:  
+
 ```  
  Department         Employee        Role  
 
@@ -136,9 +137,11 @@ Transform objects extend the base *Transform* object, and are dynamically loaded
                 +-> Engineer1 ----> Builds_stuff
                 |  
                 +-> Engineer2 ----> Builds_stuff
-```  
+```
+
 - This looks great, until the VP tells you he wants to see the hierarchy by `Role -> Employee -> Department`
 Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watchman added.
+
 ``` 
  Role                Employee           Department  
  
@@ -151,7 +154,9 @@ Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watc
                  | 
                  +-> Night_Watchman --> Engineering
 ```  
+
 - Behind the scenes, every tree or object structure is ultimately described with primitive tables of references (sometimes explicitly and sometimes implicitly).  
+
 ```  
     +-------------+      +----------+      +-------------------------+  
     |Role         |      |Department|      |Employee      |Dept.|Role|  
@@ -165,6 +170,7 @@ Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watc
                                        | 3 |Night Watchman|  0  | 1  |  
                                        +-----------------------------+  
 ```  
+
 - When you decompose a tree into tables with references, you’ll see there are end-node tables (e.g. Role & Department) and linking tables (e.g. Employee).  Technically, Employee could be an end-node table, a fourth table could link; but since the Employee table corresponds 1:1 with the linking table (in this case), we’ll just use the Employee table as the linking table.  
 - What we’ve effectively accomplished is that we’ve decompiled the tree structure down into its table description.  
 - We can now start at any one of the elemental tables and now build a tree-structure as we jump from table to table following references.  
@@ -185,4 +191,4 @@ Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watc
   
 #
 ### Do you know Jesus?
-https://www.everystudent.com/
+[everystudent.com](https://www.everystudent.com/)
