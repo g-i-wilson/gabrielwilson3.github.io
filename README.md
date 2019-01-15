@@ -1,41 +1,43 @@
 # CanoeDB  
-###### A *really simple* NoSQL database on the front-end; just a directory of CSV files on the back-end. 
+##### A *really simple* NoSQL database on the front-end; just a directory of CSV files on the back-end. 
  
  
 - **Relational:** CSV files become tables with relationships to other tables  
 - **Auto-dereferencing:** API queries spanning multiple tables are dereferenced automatically  
 - **Simple Referencing:** left column is always the reference ID  
 - **Simple configuration:** first three lines of CSV file:  
-	```
-	+------+----------------+----------------+
-	|      | Column Title 1 | Column Title 2 |
-	+----------------------------------------+
-	|      |                | Another Table  |
-	+----------------------------------------+
-	|      | TimeStamp      |                |
-	+----------------------------------------+
-	```
-	```
-	+----------------------------------------+
-	|  1   | data 1         | data 2         |
-	+----------------------------------------+
-	|  N   | data na        | data nb        |
-	+------+----------------+----------------+
-	```
+<table>
+	<tr>
+		<th></th><th>Column Title 1</th><th>Column title 2</th>
+	</tr>
+	<tr>
+		<th></th><th></th><th>A Different Table</th>
+	</tr>
+	<tr>
+		<th></th><th>TimeStamp</th><th></th>
+	</tr>
+	<tr>
+		<td>1</td><td>data 1</td><td>data 2</th>
+	</tr>
+	<tr>
+		<td>2</td><td>data a</td><td>data b</th>
+	</tr>
+	<tr>
+		<td>custom id</td><td>data AA</td><td>data BB</th>
+	</tr>
+</table>
 - **Reliable:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  "Transform" modifiers such as "Last" (See #API) can be used to return the latest data written.
-- **In-Memory:** In 64-bit age, cost rather than address space is typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization or company, and the volume of RAM you can afford, then an in-memory database makes sense.
+- **In-Memory:** In the 64-bit age, cost rather than address space typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization and volume of RAM you can afford, then in-memory makes sense.
   
 ![CanoeDB SPA Screenshot](readme_images/CanoeDB_screenshot.jpg)  
 	  
 ## Rationale for Reinvention of a Wheel:  
-- The motivation behind this project stems mainly from frustration in using SQL syntax to join random combinations of distantly related tables.  
-- SQL syntax can be declarative in simple-use cases, but for traversing chains of references bridging chasms between distantly related tables, SQL is painfully imperative.  
-- At a previous emloyer, I once wrote a microservice API layer to generate back-end SQL syntax for a MySQL database.  It seemed inefficient to compile a declarative API into imperative SQL so MySQL could compile that SQL into its internal data traversal algorithm.
-- CanoeDB is the fusion of that declarative microservice API layer with a table-structure traversal algorithm.  
+- SQL syntax might be considered declarative for simple-use cases, but in traversing reference chains across the chasms between distantly related tables, SQL is painfully imperative.  
+- CanoeDB is the fusion of a declarative microservice API layer with a table-structure traversal algorithm.  
   
 ### Tree-Structure vs. Related Tables:  
 - Tree-like data structures are wonderful (e.g. JSON), but they aren’t always a silver bullet when it comes to overly intertwined and tangled data.  
-- Example: the following describes a tree model of some departmental roles:  
+- Example: the following describes a tree model with some departmental roles:  
 ```  
 Department          Employee         Role  
 +------------+     +----------+      +--------------+  
@@ -86,7 +88,7 @@ Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watc
 - What we’ve effectively accomplished is that we’ve decompiled the tree structure down into its table description.  
 - We can now start at any one of the elemental tables and now build a tree-structure as we jump from table to table following references.  
   
-### So How Do You Want to Store Data?  
+### How Do You Want to Store Data?  
 - In some cases you may want to store data pre-structured into a tree.  If you know beforehand how data will be structured, and if that structure will not change often, then a tree may be the ideal way to store data.   
 - If, on the other hand, you want maintain flexibility in how the data will ultimately be structured, or if you will often need to change that structure, then storing data in its elemental related tables may be instead ideal.  
 - Relational databases store data in elemental tables, while document databases (e.g. MongoDB) store data in tree-like (JSON/BSON) structures (i.e. documents).  It’s possible to add intertwining and merging (as opposed to branching) links between nodes in tree structures, and this is ideal in some situations, but the complexity of the tree-structure will significantly increase.  
