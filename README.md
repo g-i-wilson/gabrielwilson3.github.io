@@ -1,5 +1,5 @@
 # CanoeDB  
-###### A *really easy* Java *in-memory* NoSQL database on the front-end; just a directory of CSV files on the back-end. 
+###### A *really simple* NoSQL database on the front-end; just a directory of CSV files on the back-end. 
  
  
 - **Relational:** CSV files become tables with relationships to other tables  
@@ -23,6 +23,7 @@
 	+------+----------------+----------------+
 	```
 - **Reliable:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  "Transform" modifiers such as "Last" (See #API) can be used to return the latest data written.
+- **In-Memory:** In 64-bit age, cost rather than address space is typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization or company, and the volume of RAM you can afford, then an in-memory database makes sense.
   
 ![CanoeDB SPA Screenshot](readme_images/CanoeDB_screenshot.jpg)  
 	  
