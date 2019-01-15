@@ -110,5 +110,7 @@ Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watc
 ## SPA Interface  
   
   
-  
-https://gabrielwilson3.github.io/  
+<table>
+  <tr><th>Do you know Jesus?</th></tr>
+  <tr><td>This page provides really good answers to your questions: <a href="https://www.everystudent.com/">everystudent.com</a></td></tr>
+</table>
