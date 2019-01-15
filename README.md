@@ -1,5 +1,5 @@
 # CanoeDB  
-##### A *really simple* NoSQL database on the front-end; just a directory of CSV files on the back-end. 
+#### A *really simple* NoSQL database on the front-end; just a directory of CSV files on the back-end. 
  
  
 * **Relational:** CSV files become tables with relationships to other tables  
@@ -30,38 +30,28 @@
 
 * **Reliable:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  *Transform* modifiers such as *Last* (See #API) can be used to return the latest data written.
 * **In-Memory:** In the 64-bit age, cost rather than address space typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization and volume of RAM you can afford, then in-memory makes sense.
-  
-![CanoeDB SPA Screenshot](readme_images/CanoeDB_screenshot.jpg)  
 	  
-  
-## API  
-
-### GET & POST Requests
+# API  
+## GET & POST Requests
 Commands can be added in any order as the REST path.
-##### GET:
+#### GET Exammple:
 `http://localhost:8080/command[/another-command][/third-command]?table.column[.Transform]=some+text`
-
-##### POST:
+#### POST Example:
 `http://localhost:8080/command[/another-command][/third-command]`
-##### BODY:
-`table.column[.Transform]=some+text`
-
-### Commands
-##### Data Type
+**BODY:** `table.column[.Transform]=some+text`
+## Commands
+#### Data Type
 - json
 - csv
 - form (default)
-
-##### R/W
+#### R/W
 - read (default)
 - write (performs a write and then a read)
-
-##### Logic Mode
+#### Logic Mode
 - and (default)
 - or
 - xor
-
-##### Example Requests:
+#### Example:
 ```
 http://localhost:8080/json
 http://localhost:8080/json/xor
@@ -71,15 +61,15 @@ http://localhost:8080/csv/write
 http://localhost:8080/spa
 ```
 
-### Transforms:
+## Transforms:
 - A transform object is applied to the set of results returned by the filter-text.  The transform is not used for anything if filter-text is not supplied.  (Note: filter-text is what is written in a write operation.)
 - Each Transform is simply the name of a Java Class located in the sub-package: `io.github.gabrielwilson3.canoedb.transforms`
 Transform objects extend the base *Transform* object, and are dynamically loaded at runtime.
 - When a table (CSV file) is loaded, the third line of the CSV file contains Transform names, which CanoeDB attempts to load.
 - If a Transform that is called out in a table file or by an HTTP query cannot be loaded, the base Transform object will be used instead.  The base Transform object makes no changes to the data being read or written.
-##### Example:
+#### Example:
 `http://localhost:8080/json?table.column.Last=some+filter+text`
-##### Transforms Currently Supported:
+#### Transforms Currently Supported:
 - First:
   - The query element table1.column1.Last=something will allow only one tale-row object to be returned from "table1".  This does not necessarily mean the combined set of data returned from the overall query is limited to one row. 
 - Last
@@ -88,25 +78,25 @@ Transform objects extend the base *Transform* object, and are dynamically loaded
 - TransmitBase64
 
 
-  ### R/W:
+  ## R/W:
 - read (default)</li>
 - write (performs a write and then a read)</li>
 
 
-### Logic Mode:
+## Logic Mode:
 - and (default)
 - or
 - xor
 	
   
-## Architecture  
+# Architecture  
   
   
-## Rationale for Reinvention of a Wheel:  
+# Rationale for Reinvention of a Wheel:  
 - SQL syntax might be considered *declarative* for simple-use cases, but in traversing reference chains across the chasms between distantly related tables, SQL is painfully *imperative*.  
 - CanoeDB is the fusion of a declarative microservice API layer with a table-structure traversal algorithm.  
   
-### Tree-Structure vs. Related Tables:  
+## Tree-Structure vs. Related Tables:  
 - Tree-like data structures are wonderful (e.g. JSON), but they aren’t always a silver bullet when it comes to overly intertwined and tangled data.  
 - Example: the following describes a tree model with some departmental roles:  
 ```  
@@ -150,19 +140,20 @@ Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watc
 - What we’ve effectively accomplished is that we’ve decompiled the tree structure down into its table description.  
 - We can now start at any one of the elemental tables and now build a tree-structure as we jump from table to table following references.  
   
-### How Do You Want to Store Data?  
+## How Do You Want to Store Data?  
 - In some cases you may want to store data pre-structured into a tree.  If you know beforehand how data will be structured, and if that structure will not change often, then a tree may be the ideal way to store data.   
 - If, on the other hand, you want maintain flexibility in how the data will ultimately be structured, or if you will often need to change that structure, then storing data in its elemental related tables may be instead ideal.  
 - Relational databases store data in elemental tables, while document databases (e.g. MongoDB) store data in tree-like (JSON/BSON) structures (i.e. documents).  It’s possible to add intertwining and merging (as opposed to branching) links between nodes in tree structures, and this is ideal in some situations, but the complexity of the tree-structure will significantly increase.  
   
   
   
-## SPA Interface  
+# SPA Interface  
+  
+![CanoeDB SPA Screenshot](readme_images/CanoeDB_screenshot.jpg)  
+
   
   
   
-  
-  
-##
-#### Do you know Jesus?
+#
+### Do you know Jesus?
 https://www.everystudent.com/
