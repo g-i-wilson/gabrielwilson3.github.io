@@ -33,58 +33,6 @@
   
 ![CanoeDB SPA Screenshot](readme_images/CanoeDB_screenshot.jpg)  
 	  
-## Rationale for Reinvention of a Wheel:  
-- SQL syntax might be considered *declarative* for simple-use cases, but in traversing reference chains across the chasms between distantly related tables, SQL is painfully *imperative*.  
-- CanoeDB is the fusion of a declarative microservice API layer with a table-structure traversal algorithm.  
-  
-### Tree-Structure vs. Related Tables:  
-- Tree-like data structures are wonderful (e.g. JSON), but they aren’t always a silver bullet when it comes to overly intertwined and tangled data.  
-- Example: the following describes a tree model with some departmental roles:  
-```  
- Department         Employee        Role  
-
- Engineering ---+-> Manager ------> Drinks_coffee 
-                |  
-                +-> Engineer1 ----> Builds_stuff
-                |  
-                +-> Engineer2 ----> Builds_stuff
-```  
-- This looks great, until the VP tells you he wants to see the hierarchy by `Role -> Employee -> Department`
-Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watchman added.
-``` 
- Role                Employee           Department  
- 
- Builds_stuff ---+-> Engineer1 -------> Engineering
-                 | 
-                 +-> Engineer2 -------> Engineering
-		 
-                                        
- Drinks_coffee --+-> Manager ---------> Engineering
-                 | 
-                 +-> Night_Watchman --> Engineering
-```  
-- Behind the scenes, every tree or object structure is ultimately described with primitive tables of references (sometimes explicitly and sometimes implicitly).  
-```  
-    +-------------+      +----------+      +-------------------------+  
-    |Role         |      |Department|      |Employee      |Dept.|Role|  
-+-----------------+  +--------------+  +-----------------------------+  
-| 0 |Builds stuff |  | 0 |Enginering|  | 0 |Manager       |  0  | 1  |  
-+-----------------+  +--------------+  +-----------------------------+  
-| 1 |Drinks coffee|                    | 1 |Engineer1     |  0  | 0  |  
-+-----------------+                    +-----------------------------+  
-                                       | 2 |Engineer2     |  0  | 0  |  
-                                       +-----------------------------+  
-                                       | 3 |Night Watchman|  0  | 1  |  
-                                       +-----------------------------+  
-```  
-- When you decompose a tree into tables with references, you’ll see there are end-node tables (e.g. Role & Department) and linking tables (e.g. Employee).  Technically, Employee could be an end-node table, a fourth table could link; but since the Employee table corresponds 1:1 with the linking table (in this case), we’ll just use the Employee table as the linking table.  
-- What we’ve effectively accomplished is that we’ve decompiled the tree structure down into its table description.  
-- We can now start at any one of the elemental tables and now build a tree-structure as we jump from table to table following references.  
-  
-### How Do You Want to Store Data?  
-- In some cases you may want to store data pre-structured into a tree.  If you know beforehand how data will be structured, and if that structure will not change often, then a tree may be the ideal way to store data.   
-- If, on the other hand, you want maintain flexibility in how the data will ultimately be structured, or if you will often need to change that structure, then storing data in its elemental related tables may be instead ideal.  
-- Relational databases store data in elemental tables, while document databases (e.g. MongoDB) store data in tree-like (JSON/BSON) structures (i.e. documents).  It’s possible to add intertwining and merging (as opposed to branching) links between nodes in tree structures, and this is ideal in some situations, but the complexity of the tree-structure will significantly increase.  
   
 ## API  
 
@@ -154,13 +102,67 @@ Transform objects extend the base *Transform* object, and are dynamically loaded
 ## Architecture  
   
   
-## Class descriptions  
+## Rationale for Reinvention of a Wheel:  
+- SQL syntax might be considered *declarative* for simple-use cases, but in traversing reference chains across the chasms between distantly related tables, SQL is painfully *imperative*.  
+- CanoeDB is the fusion of a declarative microservice API layer with a table-structure traversal algorithm.  
+  
+### Tree-Structure vs. Related Tables:  
+- Tree-like data structures are wonderful (e.g. JSON), but they aren’t always a silver bullet when it comes to overly intertwined and tangled data.  
+- Example: the following describes a tree model with some departmental roles:  
+```  
+ Department         Employee        Role  
+
+ Engineering ---+-> Manager ------> Drinks_coffee 
+                |  
+                +-> Engineer1 ----> Builds_stuff
+                |  
+                +-> Engineer2 ----> Builds_stuff
+```  
+- This looks great, until the VP tells you he wants to see the hierarchy by `Role -> Employee -> Department`
+Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watchman added.
+``` 
+ Role                Employee           Department  
+ 
+ Builds_stuff ---+-> Engineer1 -------> Engineering
+                 | 
+                 +-> Engineer2 -------> Engineering
+		 
+                                        
+ Drinks_coffee --+-> Manager ---------> Engineering
+                 | 
+                 +-> Night_Watchman --> Engineering
+```  
+- Behind the scenes, every tree or object structure is ultimately described with primitive tables of references (sometimes explicitly and sometimes implicitly).  
+```  
+    +-------------+      +----------+      +-------------------------+  
+    |Role         |      |Department|      |Employee      |Dept.|Role|  
++-----------------+  +--------------+  +-----------------------------+  
+| 0 |Builds stuff |  | 0 |Enginering|  | 0 |Manager       |  0  | 1  |  
++-----------------+  +--------------+  +-----------------------------+  
+| 1 |Drinks coffee|                    | 1 |Engineer1     |  0  | 0  |  
++-----------------+                    +-----------------------------+  
+                                       | 2 |Engineer2     |  0  | 0  |  
+                                       +-----------------------------+  
+                                       | 3 |Night Watchman|  0  | 1  |  
+                                       +-----------------------------+  
+```  
+- When you decompose a tree into tables with references, you’ll see there are end-node tables (e.g. Role & Department) and linking tables (e.g. Employee).  Technically, Employee could be an end-node table, a fourth table could link; but since the Employee table corresponds 1:1 with the linking table (in this case), we’ll just use the Employee table as the linking table.  
+- What we’ve effectively accomplished is that we’ve decompiled the tree structure down into its table description.  
+- We can now start at any one of the elemental tables and now build a tree-structure as we jump from table to table following references.  
+  
+### How Do You Want to Store Data?  
+- In some cases you may want to store data pre-structured into a tree.  If you know beforehand how data will be structured, and if that structure will not change often, then a tree may be the ideal way to store data.   
+- If, on the other hand, you want maintain flexibility in how the data will ultimately be structured, or if you will often need to change that structure, then storing data in its elemental related tables may be instead ideal.  
+- Relational databases store data in elemental tables, while document databases (e.g. MongoDB) store data in tree-like (JSON/BSON) structures (i.e. documents).  It’s possible to add intertwining and merging (as opposed to branching) links between nodes in tree structures, and this is ideal in some situations, but the complexity of the tree-structure will significantly increase.  
+  
   
   
 ## SPA Interface  
   
   
-<table>
-  <tr><th>Do you know Jesus?</th></tr>
-  <tr><td>This page provides really good answers to your questions: <a href="https://www.everystudent.com/">everystudent.com</a></td></tr>
-</table>
+  
+  
+  
+##
+#### Do you know Jesus?
+https://www.everystudent.com/
