@@ -39,9 +39,9 @@
 	</tr>
 </table>
 
-* **In-Memory (IMDB):** In the 64-bit age, cost rather than address space typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization and volume of RAM you can afford, then in-memory is practical and likely beneficial.  See [Wikipedia article on in-memory databases](https://en.wikipedia.org/wiki/In-memory_database)
-* **High Survivability:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  Rather than deleting, *Transform* modifiers such as *Last* (See #API) can be used to return the latest data written.  Append (on POSIX) is by definition a safe and atomic file operation.  If redunancy and backups are desired, it's a simple matter of periodically copying the CSV files in the database folder.
-* **High Performance:** 
+* **In-Memory (IMDB):** In the 64-bit age, cost rather than address space typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization and volume of RAM you can afford, then in-memory is practical and beneficial.  See [Wikipedia article on in-memory databases](https://en.wikipedia.org/wiki/In-memory_database)
+* **High Survivability:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  Rather than deleting, *Transform* modifiers such as *Last* (See #API) can be used to return the latest data written.  The APPEND operation (POSIX) is by definition a safe and atomic file operation.  If redunancy and backups are desired, it's just matter of periodically copying CSV files in the database folder.
+* **High Performance:** The latency of a read-only query is simply the time necessary to traverse the hash-based memory structure. The latency of a write (read-write) query is the time required to complete a file APPEND operation (if an identical table-row doesn't already exist) on each table-file the query (directly or indirectly) touches, plus the follow-on read-only query.
 
 # SPA Interface  
  
