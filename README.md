@@ -1,5 +1,5 @@
 # CanoeDB  
-#### A simple NoSQL database on the front-end, and just a directory of CSV files on the back-end. 
+#### A simple relational NoSQL database on the front-end, and just a directory of CSV files on the back-end. 
  
  
 * **Relational:** CSV files become tables with relationships to other tables  
@@ -39,14 +39,19 @@
 	</tr>
 </table>
 
-* **Reliable:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  *Transform* modifiers such as *Last* (See #API) can be used to return the latest data written.
-* **In-Memory:** In the 64-bit age, cost rather than address space typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization and volume of RAM you can afford, then in-memory makes sense.
-	  
+* **In-Memory (IMDB):** In the 64-bit age, cost rather than address space typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization and volume of RAM you can afford, then in-memory is practical and likely beneficial.  See [Wikipedia article on in-memory databases](https://en.wikipedia.org/wiki/In-memory_database)
+* **High Survivability:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  Rather than deleting, *Transform* modifiers such as *Last* (See #API) can be used to return the latest data written.  Append (on POSIX) is by definition a safe and atomic file operation.  If redunancy and backups are desired, it's a simple matter of periodically copying the CSV files in the database folder.
+* **High Performance:** 
+
+# SPA Interface  
+ 
+![](CanoeDB_screenshot.png)
+
 # HTTP API  
 *The Webserver layer*
 ## GET & POST Requests
 Commands can be added in any order as the REST path.
-#### GET Exammple:
+#### GET Example:
 `http://localhost:8080/command[/another-command][/third-command]?table.column[.Transform]=some+text`
 #### POST Example:
 `http://localhost:8080/command[/another-command][/third-command]`
@@ -181,10 +186,6 @@ Or worse, `Employee -> Department -> Role` Or both.  And he wants the Night Watc
 - Relational databases store data in elemental tables, while document databases (e.g. MongoDB) store data in tree-like (JSON/BSON) structures (i.e. documents).  It’s possible to add intertwining and merging (as opposed to branching) links between nodes in tree structures, and this is ideal in some situations, but the complexity of the tree-structure will significantly increase.  
   
   
-  
-# SPA Interface  
- 
-![](CanoeDB_screenshot.png)
   
   
 # Answers to Life's Questions:
