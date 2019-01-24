@@ -40,7 +40,7 @@
 </table>
 
 * **In-Memory (IMDB):** In the 64-bit age, cost rather than address space typically limits memory capacity.  If the growth of your data set is roughly proportional to the size of your organization and volume of RAM you can afford, then in-memory is practical and beneficial.  See [Wikipedia article on in-memory databases](https://en.wikipedia.org/wiki/In-memory_database)
-* **High Survivability:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  Rather than deleting, *Transform* modifiers such as *Last* (See #API) can be used to return the latest data written.  The APPEND operation (POSIX) is by definition a safe and atomic file operation.  If redunancy and backups are desired, it's just matter of periodically copying CSV files in the database folder.
+* **High Survivability:** data is *appended* to CSV files (O_APPEND) and cannot be deleted.  Rather than deleting, *Transform* modifiers such as *Last* (See [API](#API)) can be used to return the latest data written.  The APPEND operation (POSIX) is by definition a safe and atomic file operation.  If redunancy and backups are desired, it's just matter of periodically copying CSV files in the database folder.
 * **High Performance:** The latency of a read-only query is simply the time necessary to traverse the hash-based memory structure. The latency of a write (read-write) query is the time required to complete a file APPEND operation (if an identical table-row doesn't already exist) on each table-file the query (directly or indirectly) touches, plus the follow-on read-only query.
 
 # SPA Interface  
@@ -57,7 +57,7 @@ Commands can be added in any order as the REST path.
 `http://localhost:8080/command[/another-command][/third-command]`
 **BODY:** `table.column[.Transform]=some+text`
 ## Commands
-#### Data Type
+#### Data Type Returned
 - json
 ```json
 {
@@ -78,13 +78,16 @@ Commands can be added in any order as the REST path.
 ```
 - csv
 - form (default)
-#### R/W
+#### R/W Mode
 - read (default)
 - write (performs a write and then a read)
 #### Logic Mode
 - and (default)
 - or
 - xor
+#### Nulls Allowed
+- nonulls (default)
+- nulls (allows rows to be returned containing nulls)
 #### Example:
 ```
 http://localhost:8080/json
@@ -104,27 +107,21 @@ Transform objects extend the base *Transform* object, and are dynamically loaded
 #### Example:
 `http://localhost:8080/json?table.column.Last=some+filter+text`
 #### Transforms Currently Supported:
-- First:
-  - The query element table1.column1.Last=something will allow only one tale-row object to be returned from "table1".  This does not necessarily mean the combined set of data returned from the overall query is limited to one row. 
 - Last
+  - The query element table1.column1.Last=something will allow only the last (latest) tale-row object to be returned from "table1".  This does not necessarily mean the combined set of data returned from the overall query is limited to one row. 
+- First
+  - Similar to First, but first (earliest) row is returned.
 - TimeStamp
+  - On a write operation, entering "auto" as the filter returns the current date/time.
 - StoreBase64
+  - Stores data as Base64 in the CSV file.  Data is sent both directions as plain (URI-encoded) UTF-8.
 - TransmitBase64
-
-
-  ## R/W:
-- read (default)</li>
-- write (performs a write and then a read)</li>
-
-
-## Logic Mode:
-- and (default)
-- or
-- xor
+  - Data sent in both directions is encoded as Base64, but stored in the CSV file as plain UTF-8.
 	
   
 # Architecture  
-  
+
+
   
 # Rationale for Reinvention of a Wheel:  
 - SQL syntax might be considered *declarative* for simple-use cases, but in traversing reference chains across the chasms between distantly related tables, SQL is painfully *imperative*.  
